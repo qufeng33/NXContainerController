@@ -20,15 +20,15 @@
  */
 - (void)displayViewController:(UIViewController *)viewController;
 
-
 /**
  *  将当前的contentViewController替换为到新的viewController
  *
  *  @param viewController 新的contentViewController
  *  @param type           切换的方式
+ *  @param duration       切换效果持续时间
  */
 - (void)showViewController:(UIViewController *)viewController
-         withAnimationType:(AnimationType)type;
+         withAnimationType:(AnimationType)type duration:(NSTimeInterval)duration;
 
 
 @end

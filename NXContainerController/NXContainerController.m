@@ -41,7 +41,7 @@
     }
 }
 
-- (void)showViewController:(UIViewController *)viewController withAnimationType:(AnimationType)type{
+- (void)showViewController:(UIViewController *)viewController withAnimationType:(AnimationType)type duration:(NSTimeInterval)duration{
     if (self.isTransiting) {
         return;
     }
@@ -53,7 +53,7 @@
     [self.contentViewController willMoveToParentViewController:nil];
     [self addChildViewController:viewController];
     
-    ModalAnimator *animator = [ModalAnimator animationWithType:type duration:0.6];
+    ModalAnimator *animator = [ModalAnimator animationWithType:type duration:duration];
     TransitionContext *transitionContext = [[TransitionContext alloc] initWithFromViewController:self.contentViewController toViewController:viewController withAnimationType:type];
     
     transitionContext.animated = YES;
