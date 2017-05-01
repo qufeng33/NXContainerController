@@ -30,7 +30,6 @@
         [self addChildViewController:viewController];
         [self.view addSubview:viewController.view];
         [viewController didMoveToParentViewController:self];
-        _contentViewController = viewController;
     }
 }
 
@@ -41,7 +40,10 @@
     }
 }
 
-- (void)showViewController:(UIViewController *)viewController withAnimationType:(AnimationType)type duration:(NSTimeInterval)duration{
+- (void)showViewController:(UIViewController *)viewController
+         withAnimationType:(AnimationType)type
+                  duration:(NSTimeInterval)duration
+                completion:(void (^ _Nullable)(UIViewController * _Nonnull))completion{
     if (self.isTransiting) {
         return;
     }
@@ -56,19 +58,28 @@
     ModalAnimator *animator = [ModalAnimator animationWithType:type duration:duration];
     TransitionContext *transitionContext = [[TransitionContext alloc] initWithFromViewController:self.contentViewController toViewController:viewController withAnimationType:type];
     
+    
+    __weak __typeof(self)weakSelf = self;
     transitionContext.animated = YES;
     transitionContext.interactive = NO;
     transitionContext.completionBlock = ^(BOOL didComplete) {
-        [self.contentViewController.view removeFromSuperview];
-        [self.contentViewController removeFromParentViewController];
-        [viewController didMoveToParentViewController:self];
-        _contentViewController = viewController;
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.contentViewController.view removeFromSuperview];
+        [strongSelf.contentViewController removeFromParentViewController];
+        [viewController didMoveToParentViewController:strongSelf];
         
-        self.isTransiting = NO;
+        strongSelf.isTransiting = NO;
+        if (completion) {
+            completion(viewController);
+        }
     };
     
     self.isTransiting = YES;
     [animator animateTransition:transitionContext];
+}
+
+- (UIViewController *)contentViewController{
+    return self.childViewControllers.lastObject;
 }
 
 @end

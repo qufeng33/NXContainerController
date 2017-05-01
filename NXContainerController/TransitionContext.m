@@ -14,7 +14,7 @@
 @property (strong, nonatomic) NSDictionary             *privateViews;
 @property (assign, nonatomic) CGRect                   privateVisibleRect;
 @property (assign, nonatomic) CGRect                   privateUnvisibleRect;
-@property (weak  , nonatomic) UIView                   *containerView;
+@property (weak  , nonatomic) UIView                   *containerControllerView;
 @property (assign, nonatomic) AnimationType            type;
 
 @end
@@ -24,7 +24,7 @@
 - (instancetype)initWithFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController withAnimationType:(AnimationType)type{
     NSAssert ([fromViewController isViewLoaded] && fromViewController.view.superview, @"The fromViewController view must reside in the container view upon initializing the transition context.");
     if (self = [super init]) {
-        self.containerView = fromViewController.view.superview;
+        self.containerControllerView = fromViewController.view.superview;
         self.privateViewControllers = @{
                                         UITransitionContextFromViewControllerKey:fromViewController,
                                         UITransitionContextToViewControllerKey:toViewController,
@@ -41,6 +41,10 @@
         
     }
     return self;
+}
+
+- (UIView *)containerView{
+    return self.containerControllerView;
 }
 
 - (CGAffineTransform)targetTransform{
