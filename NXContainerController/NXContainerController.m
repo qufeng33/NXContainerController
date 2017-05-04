@@ -30,6 +30,7 @@
         [self addChildViewController:viewController];
         [self.view addSubview:viewController.view];
         [viewController didMoveToParentViewController:self];
+        _contentViewController = viewController;
     }
 }
 
@@ -67,6 +68,7 @@
         [strongSelf.contentViewController.view removeFromSuperview];
         [strongSelf.contentViewController removeFromParentViewController];
         [viewController didMoveToParentViewController:strongSelf];
+        _contentViewController = viewController;
         
         strongSelf.isTransiting = NO;
         if (completion) {
@@ -76,10 +78,6 @@
     
     self.isTransiting = YES;
     [animator animateTransition:transitionContext];
-}
-
-- (UIViewController *)contentViewController{
-    return self.childViewControllers.lastObject;
 }
 
 @end
