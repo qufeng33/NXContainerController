@@ -7,7 +7,7 @@
 //
 
 #import "FirstViewController.h"
-#import "ViewController.h"
+#import "AppDelegate.h"
 
 @interface FirstViewController ()
 
@@ -27,12 +27,16 @@
 
 - (IBAction)showVC:(UIButton *)sender{
     if ([sender.titleLabel.text isEqualToString: @"Present"]) {
-        [(ViewController *)self.parentViewController showViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"] withAnimationType:AnimationTransitionPresent];
+        [[AppDelegate sharedDelegate].containerController showViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"] withAnimationType:AnimationTransitionPresent duration:0.5 completion:^(UIViewController * _Nonnull controller) {
+            
+        }];
         return;
     }
     
     if ([sender.titleLabel.text isEqualToString:@"Dismiss"]) {
-        [(ViewController *)self.parentViewController showViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"] withAnimationType:AnimationTransitionDismiss];
+        [[AppDelegate sharedDelegate].containerController showViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"] withAnimationType:AnimationTransitionDismiss duration:0.5 completion:^(UIViewController * _Nonnull controller) {
+            
+        }];
         return;
     }
 }

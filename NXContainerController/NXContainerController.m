@@ -10,6 +10,7 @@
 
 @interface NXContainerController ()
 
+@property (strong, nonatomic) UIViewController *childController;
 @property (assign, nonatomic) BOOL isTransiting;
 
 @end
@@ -30,7 +31,7 @@
         [self addChildViewController:viewController];
         [self.view addSubview:viewController.view];
         [viewController didMoveToParentViewController:self];
-        _contentViewController = viewController;
+        self.childController = viewController;
     }
 }
 
@@ -49,15 +50,15 @@
         return;
     }
     
-    if (!self.contentViewController) {
+    if (!self.childController) {
         [self displayViewController:[[UIViewController alloc] init]];
     }
     
-    [self.contentViewController willMoveToParentViewController:nil];
+    [self.childController willMoveToParentViewController:nil];
     [self addChildViewController:viewController];
     
     ModalAnimator *animator = [ModalAnimator animationWithType:type duration:duration];
-    TransitionContext *transitionContext = [[TransitionContext alloc] initWithFromViewController:self.contentViewController toViewController:viewController withAnimationType:type];
+    TransitionContext *transitionContext = [[TransitionContext alloc] initWithFromViewController:self.childController toViewController:viewController withAnimationType:type];
     
     
     __weak __typeof(self)weakSelf = self;
@@ -65,10 +66,10 @@
     transitionContext.interactive = NO;
     transitionContext.completionBlock = ^(BOOL didComplete) {
         __strong __typeof(weakSelf)strongSelf = weakSelf;
-        [strongSelf.contentViewController.view removeFromSuperview];
-        [strongSelf.contentViewController removeFromParentViewController];
+        [strongSelf.childController.view removeFromSuperview];
+        [strongSelf.childController removeFromParentViewController];
         [viewController didMoveToParentViewController:strongSelf];
-        _contentViewController = viewController;
+        strongSelf.childController = viewController;
         
         strongSelf.isTransiting = NO;
         if (completion) {
@@ -78,6 +79,10 @@
     
     self.isTransiting = YES;
     [animator animateTransition:transitionContext];
+}
+
+- (UIViewController *)contentViewController {
+    return self.childController;
 }
 
 @end
