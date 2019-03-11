@@ -38,6 +38,7 @@
 - (void)removeAllChildViewControllers{
     for (UIViewController *vc in self.childViewControllers) {
         [vc willMoveToParentViewController:nil];
+        [vc.view removeFromSuperview];
         [vc removeFromParentViewController];
     }
 }
